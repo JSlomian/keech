@@ -1,0 +1,25 @@
+{
+  "name": "keech",
+  "version": "1.0.0",
+  "description": "Twitch.tv clone",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js --experimental-websocket"
+  },
+  "author": "Jan Słomian <slomian.jan@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "node-media-server": "^2.6.2",
+    "socket.io": "^4.7.2",
+    "socket.io-stream": "^0.9.1",
+    "sqlite3": "^5.1.7",
+    "twig": "^1.17.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
