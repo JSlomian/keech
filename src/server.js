@@ -34,10 +34,6 @@ app.get('/watch/:room', (req, res) => {
     res.render('room', {roomId: req.params.room, user: 'asd'})
 })
 
-app.get('/message/:room', (req, res) => {
-
-})
-
 app.use('/user', userController)
 
 io.on('connection', async(socket) => {
