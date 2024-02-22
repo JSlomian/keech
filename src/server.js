@@ -31,18 +31,28 @@ app.get('/', (req, res) => {
 })
 
 app.get('/watch/:room', (req, res) => {
-    res.render('room', {roomId: req.params.room})
+    res.render('room', {roomId: req.params.room, user: 'asd'})
+})
+
+app.get('/message/:room', (req, res) => {
+
 })
 
 app.use('/user', userController)
 
-io.on('connection', socket => {
+io.on('connection', async(socket) => {
     console.log('user connected')
 
     // join room event
     socket.on('join room', (roomId, userId) => {
         socket.join(roomId)
         socket.to(roomId).emit('user connected', userId)
+    })
+
+    socket.on('chat message', msg => {
+        // socket.join(roomId)
+        // socket.to(roomId).emit('message new', userId, msg)
+        io.emit('chat message', msg)
     })
 
     //offer event
