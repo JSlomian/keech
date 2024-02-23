@@ -7,7 +7,7 @@ export default {
         ping_timeout: 60
     },
     http: {
-        port: 3001,
+        port: 3000,
         allow_origin: '*'
     }
 }

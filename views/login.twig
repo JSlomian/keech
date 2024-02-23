@@ -1,0 +1,14 @@
+{% extends 'layouts/index.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    {% for error in errors %}
+        <span style="color: red; display: block">{{ error }}</span>
+    {% endfor %}
+    <form method="post">
+        <input type="email" name="email" placeholder="email@example.com">
+        <input type="text" name="password" placeholder="password">
+        <button type="submit">Login</button>
+    </form>
+{% endblock %}
