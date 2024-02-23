@@ -28,7 +28,7 @@ export async function app_register_post(req, res, next) {
                 if (this.lastID) {
                     const token = createToken(this.lastID)
                     res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge})
-                    return res.redirect('/')
+                    return res.render('register')
                 }
             })
         } else {
