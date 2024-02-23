@@ -11,9 +11,9 @@ import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import path from 'path'
 import * as url from 'url';
-import requireAuth from "../middleware/authMiddleware.js";
+import { requireAuth, checkUser } from "../middleware/authMiddleware.js";
 import getDecodedUser from "../services/tokenService.js";
-import db from "./database.js";
+import {db, dbGet, dbRun} from "./database.js";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -29,6 +29,7 @@ const io = new Server(server)
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
+app.use(checkUser)
 app.set("view engine", "twig")
 app.set("twig options", {
     allowAsync: true,
@@ -39,13 +40,12 @@ app.get('/', (req, res) => {
     res.render("main")
 })
 
-app.get('/clear', (req, res) => {
-    db.run(`DELETE FROM user`)
-})
-app.get('/watch/:room', (req, res) => {
-    const user = getDecodedUser(req.cookies.jwt)
-    console.log(user)
-    res.render('room', {roomId: req.params.room, user})
+app.get('/watch/:user', async (req, res) => {
+    const roomExists = await dbGet(`SELECT username FROM user WHERE username = ?`, [req.params.user])
+    if (roomExists) {
+    res.render('room', {roomId: req.params.user})
+    }
+    res.render('noroom')
 })
 app.use(authRoutes)
 app.use('/user', requireAuth, userRoutes)
@@ -59,23 +59,10 @@ io.on('connection', async(socket) => {
         socket.to(roomId).emit('user connected', userId)
     })
 
-    socket.on('chat message', msg => {
-        // socket.join(roomId)
-        // socket.to(roomId).emit('message new', userId, msg)
-        io.emit('chat message', msg)
+    socket.on('chat message', (msg, username, roomId) => {
+        socket.join(roomId)
+        io.to(roomId).emit('chat message', msg, username, roomId)
     })
-
-    //offer event
-    socket.on('offer', (offer, roomId) => {
-        socket.to(roomId).emit('offer', offer)
-        console.log('sent offer to room', roomId)
-    })
-
-    // ICE candidate event
-    socket.on('ice candidate', (candidate, roomId) => {
-        socket.to(roomId).emit('ice candidate', candidate)
-        console.log('Sent ICE candidate to room:', roomId)
-    });
 
     // Disconnect event
     socket.on('disconnect', () => {

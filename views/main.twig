@@ -3,5 +3,5 @@
 {% block title %}Main Page{% endblock %}
 
 {% block body %}
-    Hello there!
+    Hello there {% if user %}{{ user.username }}{% endif %}!
 {% endblock %}

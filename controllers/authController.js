@@ -1,4 +1,4 @@
-import db from "../src/database.js"
+import {dbGet, dbRun} from "../src/database.js"
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
 
@@ -10,32 +10,32 @@ export async function app_register_post(req, res, next) {
     if (req.body.password.length < 3) {
         errors.push('Password shorter than 3 characters.')
     }
+    if (req.body.username.length < 3) {
+        errors.push('Username shorter than 3 characters.')
+    }
     if (errors.length > 0) {
         return res.render('register', {errors})
     }
-    db.get(`SELECT *
+    try {
+        const row = await dbGet(`SELECT *
             FROM user
-            WHERE email = ?`, [req.body.email], async (err, row) => {
-        if (row === undefined) {
+            WHERE email = ?`, [req.body.email])
+        if (!row) {
             const salt = await bcrypt.genSalt()
             const hashedPasswword = await bcrypt.hash(req.body.password, salt)
-            const sql = `INSERT INTO user(email, password)
-                         VALUES (?, ?)`
-            db.run(sql, [req.body.email, hashedPasswword], function (err) {
-                if (err) {
-                    console.log(err)
-                }
-                if (this.lastID) {
-                    const token = createToken(this.lastID)
-                    res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge})
-                    return res.render('register')
-                }
-            })
-        } else {
-            errors.push('User exists')
+            const sql = `INSERT INTO user(email, password, username) VALUES (?, ?, ?)`
+            const lastID = await dbRun(sql, [req.body.email, hashedPasswword, req.body.username])
+            if (lastID) {
+                const token = createToken(lastID)
+                res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge, secure: true})
+                res.redirect('/')
+            } else {
+                errors.push('User exists')
+            }
         }
+    } catch (err) {
         res.render('register', {errors})
-    })
+    }
 }
 
 export function app_register_get(req, res, next) {
@@ -61,20 +61,27 @@ export async function app_login_post(req, res, next) {
     if (errors.length > 0) {
         return res.render('login', {errors})
     }
-    const sql = `SELECT *
-                 FROM user
-                 WHERE email = ?
-                   AND password = ?`
-    const salt = await bcrypt.genSalt()
-    const hashedPasswword = await bcrypt.hash(req.body.password, salt)
-    db.get(sql, [req.body.email, hashedPasswword], (err, row) => {
-        if (row === undefined) {
-            errors.push('User authentication failed')
+    try {
+        const sql = `SELECT * FROM user WHERE email = ?`
+        const row = await dbGet(sql, req.body.email)
+        if (row) {
+            const match = await bcrypt.compare(req.body.password, row.password);
+            if (match) {
+                const token = createToken(row.id);
+                res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge, secure: true});
+                return res.redirect('/');
+            } else {
+                errors.push('Invalid email or password.');
+            }
         } else {
-            const token = createToken(row.id)
-            res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge})
+
+            errors.push('Invalid email or password.');
         }
-    })
+    } catch
+        (e) {
+        console.error(e);
+        errors.push('An error occurred during login.');
+    }
     res.render('login', {errors})
 }
 
@@ -83,5 +90,6 @@ export function app_login_get(req, res, next) {
 }
 
 export function app_logout_get(req, res, next) {
-
+    res.cookie('jwt', '', {maxAge: 1})
+    res.redirect('/')
 }
