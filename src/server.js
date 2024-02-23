@@ -5,11 +5,15 @@ import {Server} from "socket.io"
 import NodeMediaServer from 'node-media-server'
 import bodyParser from "body-parser";
 import authRoutes from "../routes/authRoutes.js";
+import userRoutes from "../routes/userRoutes.js";
 import nmsConfig from "../configs/nms.config.js";
 import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import path from 'path'
 import * as url from 'url';
+import requireAuth from "../middleware/authMiddleware.js";
+import getDecodedUser from "../services/tokenService.js";
+import db from "./database.js";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -34,16 +38,17 @@ app.set("twig options", {
 app.get('/', (req, res) => {
     res.render("main")
 })
+
+app.get('/clear', (req, res) => {
+    db.run(`DELETE FROM user`)
+})
 app.get('/watch/:room', (req, res) => {
-    res.render('room', {roomId: req.params.room, user: 'asd'})
+    const user = getDecodedUser(req.cookies.jwt)
+    console.log(user)
+    res.render('room', {roomId: req.params.room, user})
 })
 app.use(authRoutes)
-
-app.get('/setc', (req, res) => {
-    // res.setHeader('Set-Cookie', 'newUser=true')
-
-    res.send('cookies')
-})
+app.use('/user', requireAuth, userRoutes)
 
 io.on('connection', async(socket) => {
     console.log('user connected')
