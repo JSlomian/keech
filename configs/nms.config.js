@@ -9,5 +9,13 @@ export default {
     http: {
         port: 3000,
         allow_origin: '*'
-    }
+    },
+    auth: {
+        api : true,
+        api_user: 'admin',
+        api_pass: 'asdqwe',
+        play: false,
+        publish: true,
+        secret: 'nodemedia2017privatekey'
+    },
 }

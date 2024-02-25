@@ -1,7 +1,34 @@
 {% extends 'layouts/index.twig' %}
 
 {% block title %}Main Page{% endblock %}
-
+{% block head %}
+    <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const streams = {{ activeStreamsJson }}
+            for (let item in streams) {
+                if (flvjs.isSupported()) {
+                    console.log(streams[item])
+                    let videoElement = document.getElementById(`stream-${streams[item].id}`);
+                    let flvPlayer = flvjs.createPlayer({
+                        type: 'flv',
+                        url: `http://${location.hostname}:3000${streams[item].streamPath}.flv`,
+                        audio: false
+                    });
+                    flvPlayer.attachMediaElement(videoElement);
+                    flvPlayer.load();
+                    videoElement.addEventListener('mouseenter', flvPlayer.play())
+                    //videoElement.addEventListener('mouseleave', flvPlayer.pause())
+                }
+            }
+        })
+    </script>
+{% endblock %}
 {% block body %}
     Hello there {% if user %}{{ user.username }}{% endif %}!
+
+    {% for stream in activeStreams %}
+        <a href="/watch{{ stream.streamPath }}">Watch</a>
+        <video id="stream-{{ stream.id }}" muted="muted"></video>
+    {% endfor %}
 {% endblock %}

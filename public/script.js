@@ -15,10 +15,12 @@ socket.on('chat message', (msg, userName, roomId) => {
         userLink.setAttribute('href', `/user/profile/${userName}`);
         userLink.textContent = userName + ": "; // Add a colon and space to separate the username from the message
         item.appendChild(userLink);
+        const messageText = document.createTextNode(msg); // Create a text node for the message
+        item.appendChild(messageText);
+    } else {
+        const messageText = document.createTextNode(`${userName}: ${msg}`); // Create a text node for the message
+        item.appendChild(messageText);
     }
-
-    const messageText = document.createTextNode(msg); // Create a text node for the message
-    item.appendChild(messageText);
 
     chat.appendChild(item);
 

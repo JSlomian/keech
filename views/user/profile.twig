@@ -1,0 +1,18 @@
+{% extends 'layouts/index.twig' %}
+
+{% block body %}
+    {{ user.username }}
+    <input type="password" class="streamKey" value="{{ user.streamkey }}">
+    <button type="button" class="showStreamKey">Show streamkey</button>
+    <script>
+        const streamKeyBtn = document.querySelector('.showStreamKey')
+        const streamKeyInput = document.querySelector('.streamKey')
+        streamKeyBtn.addEventListener('click', ()=> {
+            if (streamKeyInput.getAttribute('type') === 'password') {
+                streamKeyInput.setAttribute('type', 'text')
+            } else {
+                streamKeyInput.setAttribute('type', 'password')
+            }
+        })
+    </script>
+{% endblock %}

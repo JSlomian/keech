@@ -1,6 +1,7 @@
 import {dbGet, dbRun} from "../src/database.js"
 import bcrypt from "bcrypt"
 import jwt from 'jsonwebtoken'
+import {genStreamkey} from "../services/streamkeyService.js";
 
 export async function app_register_post(req, res, next) {
     let errors = []
@@ -23,12 +24,13 @@ export async function app_register_post(req, res, next) {
         if (!row) {
             const salt = await bcrypt.genSalt()
             const hashedPasswword = await bcrypt.hash(req.body.password, salt)
-            const sql = `INSERT INTO user(email, password, username) VALUES (?, ?, ?)`
-            const lastID = await dbRun(sql, [req.body.email, hashedPasswword, req.body.username])
+            const sql = `INSERT INTO user(email, password, username, streamkey) VALUES (?, ?, ?, ?)`
+            const streamkey = genStreamkey(req.body.username)
+            const lastID = await dbRun(sql, [req.body.email, hashedPasswword, req.body.username, streamkey])
             if (lastID) {
                 const token = createToken(lastID)
                 res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * tokenAge, secure: true})
-                res.redirect('/')
+                res.redirect('/user/profile')
             } else {
                 errors.push('User exists')
             }

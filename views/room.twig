@@ -14,6 +14,7 @@
         }
 
         video {
+            min-width: 700px;
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -22,7 +23,7 @@
     <script>
         const roomId = "{{ roomId }}"
         const userId = "{% if user %}{{ user.id }}{% else %}0{% endif %}"
-        const userName = "{% if user %}{{ user.username }}{% else %}anonymous{% endif %}"
+        const userName = "{% if user %}{{ user.username }}{% else %}Anonymous{% endif %}"
     </script>
     <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js" defer></script>
     <script src="/socket.io/socket.io.js" defer></script>

@@ -1,5 +1,4 @@
 import express from "express"
-import * as http from "http"
 import https from "https"
 import {Server} from "socket.io"
 import NodeMediaServer from 'node-media-server'
@@ -11,12 +10,14 @@ import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import path from 'path'
 import * as url from 'url';
-import { requireAuth, checkUser } from "../middleware/authMiddleware.js";
-import getDecodedUser from "../services/tokenService.js";
-import {db, dbGet, dbRun} from "./database.js";
+import {checkUser, requireAuth} from "../middleware/authMiddleware.js";
+import {db, dbGet} from "./database.js";
+
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
+
+let activeStreams = {}
 const nms = new NodeMediaServer(nmsConfig)
 nms.run()
 const app = express()
@@ -37,7 +38,13 @@ app.set("twig options", {
 })
 
 app.get('/', (req, res) => {
-    res.render("main")
+    console.log(activeStreams)
+    res.render("main", {activeStreams, activeStreamsJson: JSON.stringify(activeStreams)})
+})
+
+app.get('/clear', (req, res) => {
+    db.run(`DELETE FROM user`)
+    res.send(200)
 })
 
 app.get('/watch/:user', async (req, res) => {
@@ -50,6 +57,16 @@ app.get('/watch/:user', async (req, res) => {
 app.use(authRoutes)
 app.use('/user', requireAuth, userRoutes)
 
+
+nms.on('prePublish', (id, streamPath, args) => {
+    console.log(`stream starting ${streamPath}`)
+    activeStreams[streamPath] = {id, streamPath}
+})
+
+nms.on('donePublish', (id, streamPath, args) => {
+    console.log(`Stream ended: ${streamPath}`);
+    delete activeStreams[streamPath];
+})
 io.on('connection', async(socket) => {
     console.log('user connected')
 
