@@ -5,6 +5,10 @@ import url from "url";
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
+const key = path.join(__dirname, process.env.KEY || '../cert/key.pem')
+const cert = path.join(__dirname, process.env.CERT || '../cert/cert.pem')
+console.log(__dirname, process.env.KEY || '../cert/key.pem')
+
 export default {
     rtmp: {
         port: 1935,
@@ -19,8 +23,8 @@ export default {
     },
     https: {
         port: 8443,
-        key: fs.readFileSync(path.join(__dirname, process.env.KEY || '../cert/key.pem')),
-        cert: fs.readFileSync(path.join(__dirname, process.env.CERT || '../cert/cert.pem')),
+        key: fs.readFileSync(key),
+        cert: fs.readFileSync(cert),
     },
     auth: {
         api: true,
