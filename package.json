@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --env-file .env.local src/server.js --experimental-websocket",
-    "start": "node --env-file .env src/server.js"
+    "dev": "nodemon --env-file .env.local -e js,twig,json src/server.js",
+    "start": "NODE_ENV=production node--env-file .env src/server.js"
   },
   "author": "Jan Słomian <slomian.jan@gmail.com>",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
+    "livereload": "^0.9.3",
     "md5": "^2.3.0",
     "node-media-server": "^2.6.2",
     "socket.io": "^4.7.2",
@@ -25,6 +26,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemon": "^3.0.2",
+    "tailwindcss": "^3.4.1"
   }
 }

@@ -13,6 +13,8 @@ import * as url from 'url';
 import {checkUser, requireAuth} from "../middleware/authMiddleware.js";
 import {db, dbGet} from "./database.js";
 import * as http from "http";
+import livereload from 'livereload'
+
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
@@ -28,10 +30,23 @@ const server = https.createServer({
 }, app)
 // const server = http.createServer(app)
 const io = new Server(server)
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development'
+}
+if (process.env.NODE_ENV !== 'production') {
+    const liveserver = livereload.createServer({
+        extraExts: ['twig']
+    })
+    liveserver.watch(path.join(__dirname,'../views'),path.join(__dirname,'../public'))
+}
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(checkUser)
+app.use((req, res, next) => {
+    res.locals.env = process.env.NODE_ENV || 'development'
+    next()
+})
 app.set("view engine", "twig")
 app.set("twig options", {
     allowAsync: true,
@@ -44,13 +59,13 @@ app.get('/', (req, res) => {
 
 app.get('/clear', (req, res) => {
     db.run(`DELETE FROM user`)
-    res.send(200)
+    res.sendStatus(200)
 })
 
 app.get('/watch/:user', async (req, res) => {
     const roomExists = await dbGet(`SELECT username FROM user WHERE username = ?`, [req.params.user])
     if (roomExists) {
-    res.render('room', {roomId: req.params.user})
+        res.render('room', {roomId: req.params.user})
     }
     res.render('noroom')
 })
@@ -67,7 +82,7 @@ nms.on('donePublish', (id, streamPath, args) => {
     console.log(`Stream ended: ${streamPath}`);
     delete activeStreams[streamPath];
 })
-io.on('connection', async(socket) => {
+io.on('connection', async (socket) => {
     console.log('user connected')
 
     // join room event
