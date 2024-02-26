@@ -40,11 +40,12 @@ document.querySelector('.sendMsg').addEventListener('click', () => {
     input.value = ''
 })
 
+
 if (flvjs.isSupported()) {
     var videoElement = document.getElementById('videoElement');
     var flvPlayer = flvjs.createPlayer({
         type: 'flv',
-        url: `http://${location.hostname}:3000/live/${roomId}.flv`,
+        url: `https://${location.hostname}:8443/live/${roomId}.flv`,
         audio: true
     });
     flvPlayer.attachMediaElement(videoElement);
