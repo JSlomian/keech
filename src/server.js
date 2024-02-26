@@ -23,8 +23,8 @@ const nms = new NodeMediaServer(nmsConfig)
 nms.run()
 const app = express()
 const server = https.createServer({
-    key: fs.readFileSync(path.join(__dirname, '../', 'cert', 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, '../', 'cert', 'cert.pem'))
+    key: process.env.KEY || fs.readFileSync(path.join(__dirname, '../cert/key.pem')),
+    cert: process.env.CERT ||fs.readFileSync(path.join(__dirname, '../cert/cert.pem'))
 }, app)
 // const server = http.createServer(app)
 const io = new Server(server)
