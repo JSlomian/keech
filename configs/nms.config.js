@@ -1,13 +1,4 @@
-import fs from "fs";
 import path from "path";
-import url from "url";
-
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-
-const key = path.join(__dirname, process.env.KEY || '../cert/key.pem')
-const cert = path.join(__dirname, process.env.CERT || '../cert/cert.pem')
-console.log(__dirname, process.env.KEY || '../cert/key.pem')
 
 export default {
     rtmp: {
@@ -23,8 +14,8 @@ export default {
     },
     https: {
         port: 8443,
-        key: fs.readFileSync(key),
-        cert: fs.readFileSync(cert),
+        key: path.join(__dirname, process.env.KEY || '../cert/key.pem'),
+        cert: path.join(__dirname, process.env.CERT || '../cert/cert.pem'),
     },
     auth: {
         api: true,
