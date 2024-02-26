@@ -22,6 +22,7 @@ let activeStreams = {}
 const nms = new NodeMediaServer(nmsConfig)
 nms.run()
 const app = express()
+console.log(process.env.KEY, process.env.CERT)
 const server = https.createServer({
     key: process.env.KEY || fs.readFileSync(path.join(__dirname, '../cert/key.pem')),
     cert: process.env.CERT ||fs.readFileSync(path.join(__dirname, '../cert/cert.pem'))
