@@ -22,11 +22,11 @@ let activeStreams = {}
 const nms = new NodeMediaServer(nmsConfig)
 nms.run()
 const app = express()
-// const server = https.createServer({
-//     key: fs.readFileSync(path.join(__dirname, '../', 'cert', 'key.pem')),
-//     cert: fs.readFileSync(path.join(__dirname, '../', 'cert', 'cert.pem'))
-// }, app)
-const server = http.createServer(app)
+const server = https.createServer({
+    key: fs.readFileSync(path.join(__dirname, '../', 'cert', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, '../', 'cert', 'cert.pem'))
+}, app)
+// const server = http.createServer(app)
 const io = new Server(server)
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}))
@@ -39,7 +39,6 @@ app.set("twig options", {
 })
 
 app.get('/', (req, res) => {
-    console.log(activeStreams)
     res.render("main", {activeStreams, activeStreamsJson: JSON.stringify(activeStreams)})
 })
 
