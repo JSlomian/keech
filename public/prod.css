@@ -614,10 +614,6 @@ video {
   top: 0px;
 }
 
-.bottom-\[50px\] {
-  bottom: 50px;
-}
-
 .z-10 {
   z-index: 10;
 }
@@ -715,10 +711,6 @@ video {
   width: 3.5rem;
 }
 
-.w-28 {
-  width: 7rem;
-}
-
 .w-\[50px\] {
   width: 50px;
 }
@@ -789,20 +781,12 @@ video {
   gap: 1rem;
 }
 
-.overflow-auto {
-  overflow: auto;
-}
-
 .overflow-hidden {
   overflow: hidden;
 }
 
 .overflow-y-auto {
   overflow-y: auto;
-}
-
-.overflow-y-scroll {
-  overflow-y: scroll;
 }
 
 .break-all {
@@ -861,16 +845,6 @@ video {
 
 .bg-transparent {
   background-color: transparent;
-}
-
-.bg-white {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#ffffff\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .object-contain {

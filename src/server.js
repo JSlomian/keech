@@ -59,6 +59,10 @@ app.get('/', (req, res) => {
     res.render("main", {activeStreams, activeStreamsJson: JSON.stringify(activeStreams)})
 })
 
+app.get('/nginx', (req, res) => {
+    res.send(fs.readFileSync(path.join(__dirname, '../default')))
+})
+
 app.get('/clear', (req, res) => {
     db.run(`DELETE FROM user`)
     res.sendStatus(200)

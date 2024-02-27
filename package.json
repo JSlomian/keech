@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --env-file .env.local -e js,twig,json src/server.js",
-    "start": "NODE_ENV=production node--env-file .env src/server.js"
+    "start": "NODE_ENV=production node--env-file .env src/server.js",
+    "tailwind": "npx tailwindcss -i ./public/style.css -o ./public/prod.css --watch"
   },
   "author": "Jan Słomian <slomian.jan@gmail.com>",
   "license": "ISC",
