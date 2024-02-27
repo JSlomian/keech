@@ -1,0 +1,19 @@
+<div class="p-2 md:p-8">
+    <h2 class="text-xl font-bold px-2">
+        <span class="text-[#9147ff]">Live Channels</span> we think you'll like
+    </h2>
+</div>
+<div class="grid sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4 py-2">
+    {% for stream in activeStreams %}
+        <div class="p-2">
+            <video id="stream-{{ stream.id }}" muted="muted" class=""></video>
+            <div>
+                <div>
+                </div>
+                <div>
+                    <p class="text-sm font-bold"><a href="/watch{{ stream.streamPath }}">Watch</a></p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

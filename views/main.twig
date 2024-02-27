@@ -6,7 +6,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const streams = {{ activeStreamsJson }}
+                let
+            channels = []
             for (let item in streams) {
+                channels.push[streams[item].streamPath]
                 if (flvjs.isSupported()) {
                     console.log(streams[item])
                     let videoElement = document.getElementById(`stream-${streams[item].id}`);
@@ -15,20 +18,28 @@
                         url: `http://${location.hostname}:3000${streams[item].streamPath}.flv`,
                         audio: false
                     });
-                    flvPlayer.attachMediaElement(videoElement);
-                    flvPlayer.load();
-                    videoElement.addEventListener('mouseenter', flvPlayer.play())
-                    //videoElement.addEventListener('mouseleave', flvPlayer.pause())
+                    channels[streams[item].streamPath].isPlaying = false
+                    channels[streams[item].streamPath].flvPlayer = flvPlayer
+                    channels[streams[item].streamPath].flvPlayer.attachMediaElement(videoElement);
+                    channels[streams[item].streamPath].flvPlayer.load();
+                    videoElement.addEventListener('mouseenter', channels[streams[item].streamPath].flvPlayer.play().then(() => {
+                        channels[streams[item].streamPath].isPlaying = true
+                    }))
+                    videoElement.addEventListener('mouseleave', () => {
+                        if (channels[streams[item].streamPath].isPlaying) {
+                            channels[streams[item].streamPath].flvPlayer.pause()
+                        }
+                    })
                 }
             }
         })
     </script>
 {% endblock %}
 {% block body %}
-    Hello there {% if user %}{{ user.username }}{% endif %}!
+        {% include 'partials/livechannels.twig' %}
 
-    {% for stream in activeStreams %}
-        <a href="/watch{{ stream.streamPath }}">Watch</a>
-        <video id="stream-{{ stream.id }}" muted="muted"></video>
-    {% endfor %}
+    {#    {% for stream in activeStreams %} #}
+    {#        <a href="/watch{{ stream.streamPath }}">Watch</a> #}
+    {#        <video id="stream-{{ stream.id }}" muted="muted"></video> #}
+    {#    {% endfor %} #}
 {% endblock %}

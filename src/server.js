@@ -14,6 +14,7 @@ import {checkUser, requireAuth} from "../middleware/authMiddleware.js";
 import {db, dbGet} from "./database.js";
 import * as http from "http";
 import livereload from 'livereload'
+import recomendedChannels from '../mock/recomendedChannels.json' assert { type: 'json'}
 
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -35,7 +36,7 @@ if (!process.env.NODE_ENV) {
 }
 if (process.env.NODE_ENV !== 'production') {
     const liveserver = livereload.createServer({
-        extraExts: ['twig']
+        extraExts: ['twig','js','css']
     })
     liveserver.watch(path.join(__dirname,'../views'),path.join(__dirname,'../public'))
 }
@@ -45,6 +46,7 @@ app.use(cookieParser())
 app.use(checkUser)
 app.use((req, res, next) => {
     res.locals.env = process.env.NODE_ENV || 'development'
+    res.locals.recomendedChannels = recomendedChannels
     next()
 })
 app.set("view engine", "twig")

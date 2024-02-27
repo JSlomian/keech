@@ -1,29 +1,10 @@
 {% extends 'layouts/index.twig' %}
 
 {% block head %}
-    <style>
-        #video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 300px);
-            grid-auto-rows: 300px;
-        }
-
-        .main {
-            display: grid;
-            grid-auto-columns: 300px;
-        }
-
-        video {
-            min-width: 700px;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
     <script>
         const roomId = "{{ roomId }}"
         const userId = "{% if user %}{{ user.id }}{% else %}0{% endif %}"
-        const userName = "{% if user %}{{ user.username }}{% else %}Anonymous{% endif %}"
+        const userName = "{% if user %}{{ user.username }}{% else %}Anon{% endif %}"
     </script>
     <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js" defer></script>
     <script src="/socket.io/socket.io.js" defer></script>
@@ -31,12 +12,21 @@
 {% endblock %}
 
 {% block body %}
-    <div class="main">
-        <div>
-            <video id="videoElement" controls="controls" autoplay="autoplay"></video>
+    <div class="p-2 md:p-8 flex items-center">
+        <div class="relative overflow-hidden w-full pt-[56.25%]">
+            <video class="absolute top-0 bottom-0 left-0 right-0 w-full h-full" id="videoElement" controls="controls" autoplay="autoplay"></video>
         </div>
-        <div class="chat">
-            <input type="text" class="message"><button class="sendMsg">Wyślij</button>
+{#        <div class="absolute right-[calc(-64px)]">asd</div>#}
+        <div class="text-sm w-26 sm:w-0 xl:w-[15rem] h-screen p-2 bg-[#0e0e10] flex flex-col">
+            <div class="overflow-hidden h-full">
+            <div class="chat h-full overflow-y-auto break-all"></div>
+            </div>
+            <div>
+                <label for="send">
+                </label>
+                    <input id="send" type="text" class="message">
+                <button class="sendMsg">Wyślij</button>
+            </div>
         </div>
     </div>
 {% endblock %}

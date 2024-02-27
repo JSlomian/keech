@@ -9,6 +9,7 @@ socket.on('user connected', userId => {
 socket.on('chat message', (msg, userName, roomId) => {
     const chat = document.querySelector('.chat');
     const item = document.createElement('span');
+    item.setAttribute('class', 'block')
 
     if (parseInt(userId) !== 0) {
         const userLink = document.createElement('a');
@@ -36,8 +37,10 @@ socket.on('chat message', (msg, userName, roomId) => {
 document.querySelector('.sendMsg').addEventListener('click', () => {
     const input = document.querySelector('.message')
     let msg = input.value
+    if (msg !== '') {
     socket.emit('chat message', msg, userName, roomId)
     input.value = ''
+    }
 })
 
 
