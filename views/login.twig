@@ -3,34 +3,39 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-    <div class="pt-[100px] flex flex-col max-w-[400px] w-full mx-auto p-4">
-        <h2 class="text-3xl font-bold">Login</h2>
-        <p class="py-4">Login to stream and interact in chat.</p>
-        <div class="w-full max-w-xs">
-            <form method="post" class="bg-[#0e0e10] shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-                        Email
-                    </label>
-                <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" name="email" id="email" placeholder="email@example.com">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-                        Password
-                    </label>
-                <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" id="password" name="password" placeholder="*******">
-                </div>
-                {% for error in errors %}
-                    <p class="text-red-500 text-xs italic">{{ error }}</p>
-                {% endfor %}
-                <div class="flex items-center justify-between">
-                <button class="font-bold flex items-center rounded justify-center p-3 bg-gray-600 border border-gray-600 my-2"
-                        type="submit"><i class="fas fa-sign-in mr-2"></i>Login
-                </button>
-                <a type="button" class="inline-block align-baseline font-bold text-sm text-[#9147ff]" href="/register">Register
-                </a>
-                </div>
-            </form>
+    <div class="absolute left-[64px] xl:left-[220px] w-[100%]">
+        <div class="pt-[100px] flex flex-col max-w-[400px] w-full mx-auto p-4">
+            <h2 class="text-3xl font-bold">Login</h2>
+            <p class="py-4">Login to stream and interact in chat.</p>
+            <div class="w-full max-w-xs">
+                <form method="post" class="bg-[#0e0e10] shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                            Email
+                        </label>
+                        <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                               type="email" name="email" id="email" placeholder="email@example.com">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                            Password
+                        </label>
+                        <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                               type="password" id="password" name="password" placeholder="*******">
+                    </div>
+                    {% for error in errors %}
+                        <p class="text-red-500 text-xs italic">{{ error }}</p>
+                    {% endfor %}
+                    <div class="flex items-center justify-between">
+                        <button class="font-bold flex items-center rounded justify-center p-3 bg-gray-600 border border-gray-600 my-2"
+                                type="submit"><i class="fas fa-sign-in mr-2"></i>Login
+                        </button>
+                        <a type="button" class="inline-block align-baseline font-bold text-sm text-[#9147ff]"
+                           href="/register">Register
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -11,7 +11,7 @@ import fs from 'fs'
 import path from 'path'
 import * as url from 'url';
 import {checkUser, requireAuth} from "../middleware/authMiddleware.js";
-import {db, dbGet} from "./database.js";
+import {db, dbGet, dbRun} from "./database.js";
 import * as http from "http";
 import livereload from 'livereload'
 import recomendedChannels from '../mock/recomendedChannels.json' assert { type: 'json'}
@@ -70,6 +70,7 @@ app.get('/clear', (req, res) => {
 
 app.get('/watch/:user', async (req, res) => {
     const roomExists = await dbGet(`SELECT username FROM user WHERE username = ?`, [req.params.user])
+    console.log(roomExists)
     if (roomExists) {
         res.render('room', {roomId: req.params.user})
     }

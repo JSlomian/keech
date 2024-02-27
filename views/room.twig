@@ -9,24 +9,27 @@
     <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js" defer></script>
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="/script.js" defer></script>
+    <style>
+            .videobox {
+                width: calc(100vh - 70px);
+            }
+
+        @media (min-width: 1280px) {
+            .videobox {
+                width: calc(100vw - 450px);
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="p-2 md:p-8 flex items-center">
-        <div class="relative overflow-hidden w-full pt-[56.25%]">
-            <video class="absolute top-0 bottom-0 left-0 right-0 w-full h-full" id="videoElement" controls="controls" autoplay="autoplay"></video>
-        </div>
-{#        <div class="absolute right-[calc(-64px)]">asd</div>#}
-        <div class="text-sm w-26 sm:w-0 xl:w-[15rem] h-screen p-2 bg-[#0e0e10] flex flex-col">
-            <div class="overflow-hidden h-full">
-            <div class="chat h-full overflow-y-auto break-all"></div>
-            </div>
-            <div>
-                <label for="send">
-                </label>
-                    <input id="send" type="text" class="message">
-                <button class="sendMsg">Wyślij</button>
+    <div class="videobox absolute left-[64px] xl:left-[220px]">
+        <div class="p-2 md:p-8 flex items-start">
+            <div class="relative overflow-hidden w-full pt-[56.25%]">
+                <video class="absolute top-0 bottom-0 left-0 right-0 w-full h-full" id="videoElement"
+                       controls="controls" autoplay="autoplay"></video>
             </div>
         </div>
     </div>
+    {% include 'partials/chat.twig' %}
 {% endblock %}

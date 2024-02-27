@@ -19,13 +19,11 @@
 </head>
 <body>
 <div class="container">
-{% include 'partials/navbar.twig' %}
+    {% include 'partials/navbar.twig' %}
     <div class="pt-[60px] flex w-full">
         {% include 'partials/sidemenu.twig' %}
     </div>
-    <div class="absolute left-[64px] xl:left-[220px] w-[calc(100%-200px)]">
-        {% block body %}{% endblock %}
-    </div>
+    {% block body %}{% endblock %}
 </div>
 </body>
 </html>

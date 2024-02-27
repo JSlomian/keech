@@ -1,13 +1,57 @@
 {% extends 'layouts/index.twig' %}
 
 {% block body %}
-    {{ user.username }}
-    <input type="password" class="streamKey" value="{{ user.streamkey }}">
-    <button type="button" class="showStreamKey">Show streamkey</button>
+    <div class="absolute left-[64px] xl:left-[220px] w-[calc(100%-200px)]">
+    <div class="pt-[50px] flex flex-col max-w-[80%] w-full mx-auto p-4">
+        <div class="w-full max-w-3xl">
+            <form method="post" class="bg-[#0e0e10] shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <h2 class="text-3xl font-bold">{{ user.username }}</h2>
+                <p class="py-4">User data</p>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                        Email
+                    </label>
+                    <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           type="text" disabled name="email" id="email" value="{{ user.email }}">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                        Username
+                    </label>
+                    <input class="bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           type="text" disabled id="username" name="username" value="{{ user.username }}">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="streamkey">
+                        Streamkey
+                    </label>
+                    <input class="streamKey bg-gray-900 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                           type="password" disabled id="streamkey" name="streamkey" value="{{ user.streamkey }}">
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="showStreamKey font-bold flex items-center rounded justify-center p-3 bg-gray-600 border border-gray-600 my-2"
+                            type="button"><i class="fas fa-sign-in mr-2"></i>Reveal streamkey
+                    </button>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold">Obs connection</h2>
+                    <p class="py-4">Server: <span class="font-bold">rtmp://jslomian.dev:1935/live/</span></p>
+                    <p class="">Stream Key: <span class="font-bold">username?sign=streamkey</span></p>
+                    <h2 class="text-2xl font-bold py-4 w-full flex items-center justify-center">
+                        <a type="button" class="inline-block align-baseline font-bold text-sm text-[#9147ff]"
+                           href="/watch/{{ user.username }}">
+                            Go to Your channel
+                        </a>
+                    </h2>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
     <script>
         const streamKeyBtn = document.querySelector('.showStreamKey')
         const streamKeyInput = document.querySelector('.streamKey')
-        streamKeyBtn.addEventListener('click', ()=> {
+        streamKeyBtn.addEventListener('click', () => {
             if (streamKeyInput.getAttribute('type') === 'password') {
                 streamKeyInput.setAttribute('type', 'text')
             } else {

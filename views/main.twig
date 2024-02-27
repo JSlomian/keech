@@ -4,30 +4,30 @@
 {% block head %}
     <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js" defer></script>
     <script>
+        let channels = {}
         document.addEventListener('DOMContentLoaded', () => {
             const streams = {{ activeStreamsJson }}
-                let
-            channels = []
             for (let item in streams) {
-                channels.push[streams[item].streamPath]
                 if (flvjs.isSupported()) {
-                    console.log(streams[item])
-                    let videoElement = document.getElementById(`stream-${streams[item].id}`);
-                    let flvPlayer = flvjs.createPlayer({
+                    channels[streams[item].streamPath] = flvjs.createPlayer({
                         type: 'flv',
-                        url: `http://${location.hostname}:3000${streams[item].streamPath}.flv`,
+                        url: `https://${location.hostname}:8443${streams[item].streamPath}.flv`,
                         audio: false
-                    });
+                    })
+                    channels[streams[item].streamPath].videoElement = document.getElementById(`stream-${streams[item].id}`);
                     channels[streams[item].streamPath].isPlaying = false
-                    channels[streams[item].streamPath].flvPlayer = flvPlayer
-                    channels[streams[item].streamPath].flvPlayer.attachMediaElement(videoElement);
-                    channels[streams[item].streamPath].flvPlayer.load();
-                    videoElement.addEventListener('mouseenter', channels[streams[item].streamPath].flvPlayer.play().then(() => {
-                        channels[streams[item].streamPath].isPlaying = true
-                    }))
-                    videoElement.addEventListener('mouseleave', () => {
+                    channels[streams[item].streamPath].attachMediaElement(channels[streams[item].streamPath].videoElement);
+                    channels[streams[item].streamPath].load();
+                    channels[streams[item].streamPath].videoElement.addEventListener('mouseover', () => {
+                        channels[streams[item].streamPath].play().then(() => {
+                            channels[streams[item].streamPath].isPlaying = true
+                            console.log('play')
+                        })
+                    })
+                    channels[streams[item].streamPath].videoElement.addEventListener('mouseout', () => {
                         if (channels[streams[item].streamPath].isPlaying) {
-                            channels[streams[item].streamPath].flvPlayer.pause()
+                            channels[streams[item].streamPath].pause()
+                            console.log('stop')
                         }
                     })
                 }
@@ -36,8 +36,9 @@
     </script>
 {% endblock %}
 {% block body %}
+    <div class="absolute left-[64px] xl:left-[220px] w-[100%]">
         {% include 'partials/livechannels.twig' %}
-
+    </div>
     {#    {% for stream in activeStreams %} #}
     {#        <a href="/watch{{ stream.streamPath }}">Watch</a> #}
     {#        <video id="stream-{{ stream.id }}" muted="muted"></video> #}

@@ -606,10 +606,6 @@ video {
   right: 0px;
 }
 
-.right-\[calc\(-64px\)\] {
-  right: calc(-64px);
-}
-
 .top-0 {
   top: 0px;
 }
@@ -648,8 +644,20 @@ video {
   margin-bottom: 2px;
 }
 
+.ml-14 {
+  margin-left: 3.5rem;
+}
+
+.mr-14 {
+  margin-right: 3.5rem;
+}
+
 .mr-2 {
   margin-right: 0.5rem;
+}
+
+.mt-auto {
+  margin-top: auto;
 }
 
 .block {
@@ -711,6 +719,10 @@ video {
   width: 3.5rem;
 }
 
+.w-\[100\%\] {
+  width: 100%;
+}
+
 .w-\[50px\] {
   width: 50px;
 }
@@ -723,8 +735,16 @@ video {
   width: 100%;
 }
 
+.max-w-3xl {
+  max-width: 48rem;
+}
+
 .max-w-\[400px\] {
   max-width: 400px;
+}
+
+.max-w-\[80\%\] {
+  max-width: 80%;
 }
 
 .max-w-xs {
@@ -749,12 +769,20 @@ video {
           appearance: none;
 }
 
+.flex-row {
+  flex-direction: row;
+}
+
 .flex-col {
   flex-direction: column;
 }
 
 .flex-nowrap {
   flex-wrap: nowrap;
+}
+
+.items-start {
+  align-items: flex-start;
 }
 
 .items-center {
@@ -783,10 +811,6 @@ video {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.overflow-y-auto {
-  overflow-y: auto;
 }
 
 .break-all {
@@ -916,6 +940,10 @@ video {
   padding-top: 100px;
 }
 
+.pt-\[50px\] {
+  padding-top: 50px;
+}
+
 .pt-\[56\.25\%\] {
   padding-top: 56.25%;
 }
@@ -930,6 +958,11 @@ video {
 
 .align-baseline {
   vertical-align: baseline;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-3xl {
@@ -1032,8 +1065,16 @@ html {
 }
 
 @media (min-width: 640px) {
-  .sm\:w-0 {
-    width: 0px;
+  .sm\:ml-16 {
+    margin-left: 4rem;
+  }
+
+  .sm\:mr-16 {
+    margin-right: 4rem;
+  }
+
+  .sm\:hidden {
+    display: none;
   }
 
   .sm\:w-16 {
@@ -1046,6 +1087,10 @@ html {
 }
 
 @media (min-width: 768px) {
+  .md\:fixed {
+    position: fixed;
+  }
+
   .md\:flex {
     display: flex;
   }
@@ -1064,8 +1109,24 @@ html {
 }
 
 @media (min-width: 1280px) {
+  .xl\:visible {
+    visibility: visible;
+  }
+
   .xl\:left-\[220px\] {
     left: 220px;
+  }
+
+  .xl\:ml-\[15rem\] {
+    margin-left: 15rem;
+  }
+
+  .xl\:mr-\[15rem\] {
+    margin-right: 15rem;
+  }
+
+  .xl\:block {
+    display: block;
   }
 
   .xl\:flex {
