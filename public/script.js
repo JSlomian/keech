@@ -2,8 +2,9 @@ const socket = io('/')
 
 socket.emit('join room', roomId, userId)
 
-socket.on('user connected', userId => {
-    console.log('user connected:', userId)
+
+socket.on('user connected', viewers => {
+    document.querySelector('.watching').textContent = viewers
 })
 
 socket.on('chat message', (msg, userName, roomId) => {

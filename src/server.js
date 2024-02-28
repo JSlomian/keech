@@ -14,7 +14,7 @@ import {checkUser, requireAuth} from "../middleware/authMiddleware.js";
 import {db, dbGet, dbRun} from "./database.js";
 import * as http from "http";
 import livereload from 'livereload'
-import recomendedChannels from '../mock/recomendedChannels.json' assert { type: 'json'}
+import recomendedChannels from '../mock/recomendedChannels.json' assert {type: 'json'}
 
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -22,6 +22,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 
 let activeStreams = {}
+let streamViewers = {}
 const nms = new NodeMediaServer(nmsConfig)
 nms.run()
 const app = express()
@@ -36,9 +37,9 @@ if (!process.env.NODE_ENV) {
 }
 if (process.env.NODE_ENV !== 'production') {
     const liveserver = livereload.createServer({
-        extraExts: ['twig','js','css']
+        extraExts: ['twig', 'js', 'css']
     })
-    liveserver.watch(path.join(__dirname,'../views'),path.join(__dirname,'../public'))
+    liveserver.watch(path.join(__dirname, '../views'), path.join(__dirname, '../public'))
 }
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({extended: true}))
@@ -82,7 +83,7 @@ app.use('/user', requireAuth, userRoutes)
 
 nms.on('prePublish', (id, streamPath, args) => {
     console.log(`stream starting ${streamPath}`)
-    activeStreams[streamPath] = {id, streamPath}
+    activeStreams[streamPath] = {id, streamPath, watchPath: '/watch/' + streamPath.split('/').pop()}
 })
 
 nms.on('donePublish', (id, streamPath, args) => {
@@ -95,7 +96,16 @@ io.on('connection', async (socket) => {
     // join room event
     socket.on('join room', (roomId, userId) => {
         socket.join(roomId)
-        socket.to(roomId).emit('user connected', userId)
+        if (typeof (streamViewers[roomId]) === 'undefined') {
+            streamViewers[roomId] = {viewers: 0}
+        } else if (typeof (streamViewers[roomId].viewers) === 'undefined') {
+            streamViewers[roomId].viewers = 0
+        }
+        streamViewers[roomId].viewers += 1
+        // socket.to(roomId).emit('user connected', userId)
+        io.to(roomId).emit('user connected', streamViewers[roomId].viewers)
+        streamViewers.socketId = socket.id
+        // console.log(socket.id)
     })
 
     socket.on('chat message', (msg, username, roomId) => {
@@ -106,6 +116,24 @@ io.on('connection', async (socket) => {
     // Disconnect event
     socket.on('disconnect', () => {
         console.log('A user disconnected.')
-    });
+        if (typeof (streamViewers[roomId]) === 'undefined') {
+            streamViewers[roomId] = {viewers: 0}
+        } else if (typeof (streamViewers[roomId].viewers) === 'undefined') {
+            streamViewers[roomId].viewers = 0
+        }
+        streamViewers[roomId].viewers -= 1
+        if (streamViewers[roomId].viewers < 0) {
+            streamViewers[roomId].viewers = 0
+        }
+        // let roomIdToFind = null;
+        //
+        // for (let roomId in streamViewers) {
+        //     if (streamViewers[roomId].socketId === 'dsa') {
+        //         roomIdToFind = roomId;
+        //         break;
+        //     }
+        // }
+        // io.to
+    })
 })
 server.listen(3443)
